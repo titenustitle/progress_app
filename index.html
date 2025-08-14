@@ -1,0 +1,2493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Assistant - University Education Helper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Navigation Styles */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Main Content Styles */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Dashboard Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Schedule Styles */
+        .schedule-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .schedule-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .schedule-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .schedule-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .schedule-date {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .schedule-day {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .schedule-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .schedule-body {
+            padding: 1rem;
+        }
+        
+        .schedule-item {
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent);
+            transition: background-color 0.3s ease;
+        }
+        
+        .schedule-item:hover {
+            background-color: #f0f4ff;
+        }
+        
+        .schedule-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .schedule-time {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .schedule-time i {
+            margin-right: 0.5rem;
+        }
+        
+        .schedule-course {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .schedule-topic {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .schedule-progress {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .schedule-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .schedule-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .schedule-checkbox input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+        
+        .schedule-notes {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        
+        .schedule-notes:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        /* Course Styles */
+        .course-card {
+            margin-bottom: 1.5rem;
+        }
+        
+        .course-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .course-code {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .course-body {
+            padding: 1rem;
+        }
+        
+        .topic-list {
+            list-style: none;
+        }
+        
+        .topic-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .topic-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+        
+        .topic-checkbox {
+            margin-right: 0.75rem;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+        
+        .topic-name {
+            flex-grow: 1;
+        }
+        
+        .topic-status {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        /* Progress Styles */
+        .progress-container {
+            margin-bottom: 1rem;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Q&A Styles */
+        .qa-container {
+            margin-bottom: 1.5rem;
+        }
+        
+        .qa-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .qa-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .qa-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .qa-button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .qa-button i {
+            font-size: 1.2rem;
+        }
+        
+        .qa-response {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .qa-response.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .qa-response-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .qa-response-header i {
+            margin-right: 0.5rem;
+        }
+        
+        .qa-response-text {
+            line-height: 1.6;
+        }
+        
+        .qa-history {
+            margin-top: 1.5rem;
+        }
+        
+        .qa-history-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .qa-history-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .qa-question {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .qa-answer {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        
+        /* Resource Upload Styles */
+        .resource-upload {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .resource-upload-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .resource-upload-header i {
+            margin-right: 0.5rem;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-text {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .upload-button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .resource-list {
+            margin-top: 1rem;
+        }
+        
+        .resource-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+        
+        .resource-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+        
+        .resource-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .resource-icon {
+            margin-right: 0.75rem;
+            color: var(--primary);
+        }
+        
+        .resource-name {
+            font-weight: 500;
+        }
+        
+        .resource-size {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-left: 0.5rem;
+        }
+        
+        .resource-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .resource-remove:hover {
+            color: #d32f2f;
+        }
+        
+        /* CGPA Tracker Styles */
+        .cgpa-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cgpa-table th, .cgpa-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .cgpa-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .cgpa-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .cgpa-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .cgpa-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .cgpa-calculate {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .cgpa-calculate:hover {
+            background-color: #3d8b40;
+        }
+        
+        .cgpa-result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .cgpa-result.active {
+            display: block;
+        }
+        
+        .cgpa-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .cgpa-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .cgpa-details h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .cgpa-details-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cgpa-details-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        /* Motivation Styles */
+        .motivation-card {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .motivation-quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .motivation-author {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Study Timer Styles */
+        .study-timer {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .timer-display {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .timer-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .timer-button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .timer-button.reset {
+            background-color: var(--gray);
+        }
+        
+        .timer-button.reset:hover {
+            background-color: #5a6268;
+        }
+        
+        /* Quick Notes Styles */
+        .quick-notes {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .notes-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .notes-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        
+        .notes-textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .notes-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        
+        .save-notes-button {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .save-notes-button:hover {
+            background-color: #3d8b40;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            nav ul {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary);
+                flex-direction: column;
+                padding: 1rem 0;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                z-index: 50;
+            }
+            
+            nav ul.active {
+                transform: translateY(0);
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            .cgpa-table {
+                font-size: 0.9rem;
+            }
+            
+            .cgpa-table th, .cgpa-table td {
+                padding: 0.5rem;
+            }
+            
+            .schedule-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .timer-display {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #3d8b40;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .notification.show {
+            display: block;
+        }
+        
+        .notification.warning {
+            background-color: var(--warning);
+        }
+        
+        .notification.danger {
+            background-color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Study Assistant</span>
+            </div>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-page="schedule">Study Schedule</a></li>
+                    <li><a href="#" class="nav-link" data-page="courses">Courses</a></li>
+                    <li><a href="#" class="nav-link" data-page="progress">Progress</a></li>
+                    <li><a href="#" class="nav-link" data-page="qa">Q&A</a></li>
+                    <li><a href="#" class="nav-link" data-page="cgpa">CGPA Tracker</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page active">
+                <h1 class="text-center mb-2">Study Dashboard</h1>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Days Until Exams</div>
+                        <div class="stat-value">19</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Courses</div>
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">To Complete</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Study Progress</div>
+                        <div class="stat-value" id="dashboardProgress">0%</div>
+                        <div class="stat-label">Overall</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Current CGPA</div>
+                        <div class="stat-value">3.40</div>
+                        <div class="stat-label">Target: 3.75+</div>
+                    </div>
+                </div>
+                
+                <div class="motivation-card">
+                    <div class="motivation-quote">"Every big achievement starts with the decision to try. Let's build your foundation strong today!"</div>
+                    <div class="motivation-author">- Daily Motivation</div>
+                </div>
+                
+                <div class="study-timer">
+                    <h3>Study Timer</h3>
+                    <div class="timer-display" id="timerDisplay">00:00:00</div>
+                    <div class="timer-controls">
+                        <button class="timer-button" id="startTimer">Start</button>
+                        <button class="timer-button" id="pauseTimer">Pause</button>
+                        <button class="timer-button reset" id="resetTimer">Reset</button>
+                    </div>
+                </div>
+                
+                <div class="quick-notes">
+                    <div class="notes-header">
+                        <h3 class="notes-title">Quick Notes</h3>
+                    </div>
+                    <textarea class="notes-textarea" id="quickNotesTextarea" placeholder="Add your quick notes here..."></textarea>
+                    <div class="notes-actions">
+                        <button class="save-notes-button" id="saveNotesButton">Save Notes</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Today's Study Plan</h2>
+                        <span id="todayDate"></span>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">
+                            <i class="fas fa-clock"></i> 2h
+                        </div>
+                        <div class="schedule-course">MCJ-1201:</div>
+                        <div class="schedule-topic">Interpersonal Communication — Definition, Nature, Principles</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">
+                            <i class="fas fa-clock"></i> 1h
+                        </div>
+                        <div class="schedule-course">MCJ-1202:</div>
+                        <div class="schedule-topic">News — Definition, Characteristics/Principles</div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">
+                            <i class="fas fa-clock"></i> 1h
+                        </div>
+                        <div class="schedule-course">MCJ-1203:</div>
+                        <div class="schedule-topic">বাংলাদেশ বিভিন্ন বছরের নির্বাচন, প্রবণতা</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Quick Actions</h2>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-primary mb-1" onclick="showPage('schedule')">View Full Schedule</button>
+                        <button class="btn btn-success mb-1" onclick="showPage('progress')">Check Progress</button>
+                        <button class="btn btn-primary" onclick="showPage('qa')">Ask a Question</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Schedule Page -->
+            <div id="schedule" class="page">
+                <h1 class="text-center mb-2">Study Schedule</h1>
+                
+                <div class="schedule-container" id="scheduleContainer">
+                    <!-- Schedule cards will be dynamically loaded here -->
+                </div>
+                
+                <div class="text-center">
+                    <button class="btn btn-primary" id="loadMoreDays">Load More Days</button>
+                </div>
+            </div>
+            
+            <!-- Courses Page -->
+            <div id="courses" class="page">
+                <h1 class="text-center mb-2">Course Materials</h1>
+                
+                <div class="course-card">
+                    <div class="course-header">
+                        <div>
+                            <div class="course-title">Small and Group Communication</div>
+                            <div class="course-code">MCJ-1201</div>
+                        </div>
+                        <div>Mid: 23/30</div>
+                    </div>
+                    <div class="course-body">
+                        <ul class="topic-list">
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-1">
+                                <label for="mcj1201-1" class="topic-name">Interpersonal Communication — Definition, Nature, Principles</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-2">
+                                <label for="mcj1201-2" class="topic-name">Communication Continuum</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-3">
+                                <label for="mcj1201-3" class="topic-name">Maslow's Hierarchy of Needs Theory</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-4">
+                                <label for="mcj1201-4" class="topic-name">William Schutz Interpersonal Needs Theory</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-5">
+                                <label for="mcj1201-5" class="topic-name">Elements of Interpersonal Communication (incl. Noise)</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-6">
+                                <label for="mcj1201-6" class="topic-name">Dyadic & Triadic Communication — Definition, Types, Stages</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-7">
+                                <label for="mcj1201-7" class="topic-name">Relationship Stages — Contact, Involvement, Intimacy, etc.</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-8">
+                                <label for="mcj1201-8" class="topic-name">Small Group Communication — Definition, Types, Condition</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-9">
+                                <label for="mcj1201-9" class="topic-name">Interpersonal Conflict — Definition, Types, Causes, Resolution</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-10">
+                                <label for="mcj1201-10" class="topic-name">Communication Apprehension — Definition, Types, Causes, Overcoming</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1201-11">
+                                <label for="mcj1201-11" class="topic-name">Leadership — Definition, Myths, Approaches, Functions & Skills</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="course-card">
+                    <div class="course-header">
+                        <div>
+                            <div class="course-title">News Gathering and Writing</div>
+                            <div class="course-code">MCJ-1202</div>
+                        </div>
+                        <div>Mid: TBD</div>
+                    </div>
+                    <div class="course-body">
+                        <ul class="topic-list">
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-1">
+                                <label for="mcj1202-1" class="topic-name">News — Definition, Characteristics/Principles, Elements</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-2">
+                                <label for="mcj1202-2" class="topic-name">Titles & Jobs of journalists — Newspaper, TV, Online</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-3">
+                                <label for="mcj1202-3" class="topic-name">Beats in Journalism</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-4">
+                                <label for="mcj1202-4" class="topic-name">Reporting — Definition, Titles & Jobs, Reporter Profile</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-5">
+                                <label for="mcj1202-5" class="topic-name">News Source — Definition, Major Sources, 5 ways to gather info</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-6">
+                                <label for="mcj1202-6" class="topic-name">News Gathering — Definition, Techniques, Modern Changes</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-7">
+                                <label for="mcj1202-7" class="topic-name">Interview — Definition, Types, Conducting, Do's & Don'ts</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-8">
+                                <label for="mcj1202-8" class="topic-name">News Structure — Definition, Methods, Inverted Pyramid</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1202-9">
+                                <label for="mcj1202-9" class="topic-name">Intro Writing — Types</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="course-card">
+                    <div class="course-header">
+                        <div>
+                            <div class="course-title">Contemporary Issues of Bangladesh</div>
+                            <div class="course-code">MCJ-1203</div>
+                        </div>
+                        <div>Mid: 25.5/30</div>
+                    </div>
+                    <div class="course-body">
+                        <ul class="topic-list">
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1203-1">
+                                <label for="mcj1203-1" class="topic-name">বাংলাদেশের বিভিন্ন বছরের নির্বাচন, প্রবণতা</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1203-2">
+                                <label for="mcj1203-2" class="topic-name">জুলাই বিপ্লব</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1203-3">
+                                <label for="mcj1203-3" class="topic-name">সাম্প্রদায়িকতা</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1203-4">
+                                <label for="mcj1203-4" class="topic-name">মব</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1203-5">
+                                <label for="mcj1203-5" class="topic-name">বিশেষ ক্ষমতা আইন</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1203-6">
+                                <label for="mcj1203-6" class="topic-name">মূল্যস্ফীতি/ মুদ্রাস্ফীতি</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1203-7">
+                                <label for="mcj1203-7" class="topic-name">ধর্ষণ বলপ্রয়োগ</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1203-8">
+                                <label for="mcj1203-8" class="topic-name">মাইলস্টোন</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="course-card">
+                    <div class="course-header">
+                        <div>
+                            <div class="course-title">Computer Applications in Journalism</div>
+                            <div class="course-code">MCJ-1204</div>
+                        </div>
+                        <div>Mid: TBD</div>
+                    </div>
+                    <div class="course-body">
+                        <ul class="topic-list">
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1204-1">
+                                <label for="mcj1204-1" class="topic-name">Computer — Definition, Classification & Characteristics</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1204-2">
+                                <label for="mcj1204-2" class="topic-name">Computer Components — Hardware & Software</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1204-3">
+                                <label for="mcj1204-3" class="topic-name">Data Communication System — Definition, Elements</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1204-4">
+                                <label for="mcj1204-4" class="topic-name">Computer Network — Classification, Components</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1204-5">
+                                <label for="mcj1204-5" class="topic-name">Network Topology</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1204-6">
+                                <label for="mcj1204-6" class="topic-name">Artificial Intelligence — Challenges, Uses, Advantages & Disadvantages</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                            <li class="topic-item">
+                                <input type="checkbox" class="topic-checkbox" id="mcj1204-7">
+                                <label for="mcj1204-7" class="topic-name">Number System</label>
+                                <span class="topic-status status-pending">Pending</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Page -->
+            <div id="progress" class="page">
+                <h1 class="text-center mb-2">Study Progress</h1>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Overall Progress</h2>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>Completion</span>
+                            <span id="overallProgress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="overallProgressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Course Progress</h2>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>MCJ-1201: Small and Group Communication</span>
+                            <span id="mcj1201Progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="mcj1201ProgressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>MCJ-1202: News Gathering and Writing</span>
+                            <span id="mcj1202Progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="mcj1202ProgressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>MCJ-1203: Contemporary Issues of Bangladesh</span>
+                            <span id="mcj1203Progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="mcj1203ProgressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>MCJ-1204: Computer Applications in Journalism</span>
+                            <span id="mcj1204Progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="mcj1204ProgressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Study Goals</h2>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>Daily Study Hours (Goal: 4h)</span>
+                            <span>3.5h / 4h</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 87.5%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>Weekly Topics (Goal: 15)</span>
+                            <span>12 / 15</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>Practice Tests (Goal: 4)</span>
+                            <span>1 / 4</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Achievements</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Study Streak</div>
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Days</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Topics Completed</div>
+                            <div class="stat-value" id="topicsCompleted">0</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Questions Answered</div>
+                            <div class="stat-value">42</div>
+                            <div class="stat-label">This Week</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Q&A Page -->
+            <div id="qa" class="page">
+                <h1 class="text-center mb-2">Study Q&A</h1>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Ask a Question</h2>
+                    </div>
+                    <div class="qa-container">
+                        <textarea class="qa-input" id="questionInput" rows="4" placeholder="Type your study question here..."></textarea>
+                        <button class="qa-button" id="askButton">
+                            <i class="fas fa-paper-plane"></i>
+                            Ask Question
+                        </button>
+                        <div class="qa-response" id="qaResponse">
+                            <div class="qa-response-header">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>Answer:</span>
+                            </div>
+                            <div class="qa-response-text" id="answerText"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resource-upload">
+                    <div class="resource-upload-header">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Study Resources</span>
+                    </div>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            Drag and drop your study materials here or click to browse
+                        </div>
+                        <button class="upload-button" id="uploadButton">Select Files</button>
+                        <input type="file" id="fileInput" class="file-input" multiple accept=".pdf,.txt,.doc,.docx,.ppt,.pptx">
+                    </div>
+                    <div class="resource-list" id="resourceList">
+                        <!-- Uploaded resources will be listed here -->
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Questions</h2>
+                    </div>
+                    <div class="qa-history">
+                        <div class="qa-history-item">
+                            <div class="qa-question">Q: What are the stages of relationship development in interpersonal communication?</div>
+                            <div class="qa-answer">A: The stages of relationship development include: Contact, Involvement, Intimacy, Deterioration, Repair, and Dissolution. Each stage represents a different phase in how relationships evolve over time.</div>
+                        </div>
+                        
+                        <div class="qa-history-item">
+                            <div class="qa-question">Q: What is the inverted pyramid structure in news writing?</div>
+                            <div class="qa-answer">A: The inverted pyramid structure organizes information with the most important details at the beginning, followed by supporting details, and ending with background information. This allows readers to grasp key facts quickly.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CGPA Tracker Page -->
+            <div id="cgpa" class="page">
+                <h1 class="text-center mb-2">CGPA Tracker</h1>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Current CGPA</h2>
+                    </div>
+                    <div class="cgpa-result active">
+                        <div class="cgpa-value">3.40</div>
+                        <p class="text-center">Based on 1.1 Semester Results</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Semester Results</h2>
+                    </div>
+                    <table class="cgpa-table">
+                        <thead>
+                            <tr>
+                                <th>Semester</th>
+                                <th>MCJ-1101</th>
+                                <th>MCJ-1102</th>
+                                <th>MCJ-1103</th>
+                                <th>MCJ-1104</th>
+                                <th>MCJ-1105</th>
+                                <th>Credit Hours</th>
+                                <th>Grade Points</th>
+                                <th>Semester GPA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.1</td>
+                                <td>3.50</td>
+                                <td>3.50</td>
+                                <td>3.50</td>
+                                <td>3.00</td>
+                                <td>3.50</td>
+                                <td>15</td>
+                                <td>51.00</td>
+                                <td>3.40</td>
+                            </tr>
+                            <tr>
+                                <td>1.2</td>
+                                <td><input type="number" class="cgpa-input" id="mcj1201" min="0" max="4" step="0.01" value="3.75"></td>
+                                <td><input type="number" class="cgpa-input" id="mcj1202" min="0" max="4" step="0.01" value="3.75"></td>
+                                <td><input type="number" class="cgpa-input" id="mcj1203" min="0" max="4" step="0.01" value="3.75"></td>
+                                <td><input type="number" class="cgpa-input" id="mcj1204" min="0" max="4" step="0.01" value="3.75"></td>
+                                <td>-</td>
+                                <td>12</td>
+                                <td id="gradePoints">45.00</td>
+                                <td id="sem12GPA">3.75</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="cgpa-calculate" onclick="calculateCGPA()">Calculate CGPA</button>
+                    <div class="cgpa-result" id="cgpaResult">
+                        <div class="cgpa-value" id="finalCGPA">3.58</div>
+                        <p class="text-center">Projected CGPA after 1.2 Semester</p>
+                        <p class="text-center">Target: 3.75+</p>
+                        
+                        <div class="cgpa-details">
+                            <h3>Calculation Details</h3>
+                            <div class="cgpa-details-item">
+                                <span>Total Credit Hours (1.1 + 1.2):</span>
+                                <span id="totalCredits">27</span>
+                            </div>
+                            <div class="cgpa-details-item">
+                                <span>Total Grade Points (1.1 + 1.2):</span>
+                                <span id="totalGradePoints">96.00</span>
+                            </div>
+                            <div class="cgpa-details-item">
+                                <span>CGPA:</span>
+                                <span id="cgpaCalculation">3.58</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">CGPA Projection</h2>
+                    </div>
+                    <table class="cgpa-table">
+                        <thead>
+                            <tr>
+                                <th>Semester</th>
+                                <th>Target GPA</th>
+                                <th>Credit Hours</th>
+                                <th>Projected CGPA</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.1</td>
+                                <td>3.40</td>
+                                <td>15</td>
+                                <td>3.40</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>1.2</td>
+                                <td>4.00</td>
+                                <td>12</td>
+                                <td>3.70</td>
+                                <td>In Progress</td>
+                            </tr>
+                            <tr>
+                                <td>2.1</td>
+                                <td>3.90</td>
+                                <td>15</td>
+                                <td>3.75</td>
+                                <td>Planned</td>
+                            </tr>
+                            <tr>
+                                <td>2.2</td>
+                                <td>3.90</td>
+                                <td>15</td>
+                                <td>3.77</td>
+                                <td>Planned</td>
+                            </tr>
+                            <tr>
+                                <td>3.1</td>
+                                <td>3.90</td>
+                                <td>15</td>
+                                <td>3.79</td>
+                                <td>Planned</td>
+                            </tr>
+                            <tr>
+                                <td>3.2</td>
+                                <td>3.90</td>
+                                <td>15</td>
+                                <td>3.81</td>
+                                <td>Planned</td>
+                            </tr>
+                            <tr>
+                                <td>4.1</td>
+                                <td>3.90</td>
+                                <td>15</td>
+                                <td>3.83</td>
+                                <td>Planned</td>
+                            </tr>
+                            <tr>
+                                <td>4.2</td>
+                                <td>3.90</td>
+                                <td>15</td>
+                                <td>3.85</td>
+                                <td>Planned</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Study Assistant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Schedule data
+        const scheduleData = [
+            {
+                date: "August 13, 2025",
+                day: "Monday",
+                dayNumber: 1,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Interpersonal Communication — Definition, Nature, Principles" },
+                    { time: "1h", course: "MCJ-1202", topic: "News — Definition, Characteristics/Principles, Elements" },
+                    { time: "1h", course: "MCJ-1203", topic: "বাংলাদেশ বিভিন্ন বছরের নির্বাচন, প্রবণতা" }
+                ]
+            },
+            {
+                date: "August 14, 2025",
+                day: "Tuesday",
+                dayNumber: 2,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Maslow's Hierarchy of Needs Theory, William Schutz Interpersonal Needs Theory" },
+                    { time: "1h", course: "MCJ-1202", topic: "Titles & Jobs of journalists — Newspaper, TV, Online" },
+                    { time: "1h", course: "MCJ-1203", topic: "জুলাই বিপ্লব" }
+                ]
+            },
+            {
+                date: "August 15, 2025",
+                day: "Wednesday",
+                dayNumber: 3,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Elements of Interpersonal Communication (incl. Noise)" },
+                    { time: "1h", course: "MCJ-1202", topic: "Beats in Journalism & Reporting — Definition, Titles & Jobs" },
+                    { time: "1h", course: "MCJ-1203", topic: "সাম্প্রদায়িকতা" }
+                ]
+            },
+            {
+                date: "August 16, 2025",
+                day: "Thursday",
+                dayNumber: 4,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Dyadic & Triadic Communication — Definition, Types, Stages" },
+                    { time: "1h", course: "MCJ-1202", topic: "News Source — Definition, Major Sources, 5 ways to gather info" },
+                    { time: "1h", course: "MCJ-1203", topic: "মব" }
+                ]
+            },
+            {
+                date: "August 17, 2025",
+                day: "Friday",
+                dayNumber: 5,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Relationship Stages — Contact, Involvement, Intimacy, etc." },
+                    { time: "1h", course: "MCJ-1202", topic: "News Gathering — Definition, Techniques, Modern Changes" },
+                    { time: "1h", course: "MCJ-1203", topic: "বিশেষ ক্ষমতা আইন" }
+                ]
+            },
+            {
+                date: "August 18, 2025",
+                day: "Saturday",
+                dayNumber: 6,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Small Group Communication — Definition, Types, Condition" },
+                    { time: "1h", course: "MCJ-1202", topic: "Interview — Definition, Types, Conducting, Do's & Don'ts" },
+                    { time: "1h", course: "MCJ-1203", topic: "মূল্যস্ফীতি/ মুদ্রাস্ফীতি" }
+                ]
+            },
+            {
+                date: "August 19, 2025",
+                day: "Sunday",
+                dayNumber: 7,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Interpersonal Conflict — Definition, Types, Causes, Resolution" },
+                    { time: "1h", course: "MCJ-1202", topic: "News Structure — Definition, Methods, Inverted Pyramid" },
+                    { time: "1h", course: "MCJ-1203", topic: "ধর্ষণ বলপ্রয়োগ" }
+                ]
+            },
+            {
+                date: "August 20, 2025",
+                day: "Monday",
+                dayNumber: 8,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Communication Apprehension — Definition, Types, Causes, Overcoming" },
+                    { time: "1h", course: "MCJ-1202", topic: "Intro Writing — Types" },
+                    { time: "1h", course: "MCJ-1203", topic: "মাইলস্টোন" }
+                ]
+            },
+            {
+                date: "August 21, 2025",
+                day: "Tuesday",
+                dayNumber: 9,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Leadership — Definition, Myths, Approaches, Functions & Skills" },
+                    { time: "1h", course: "MCJ-1202", topic: "Revision — News, Titles, Beats" },
+                    { time: "1h", course: "MCJ-1203", topic: "Revision (Topics 1–4)" }
+                ]
+            },
+            {
+                date: "August 22, 2025",
+                day: "Wednesday",
+                dayNumber: 10,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Revision — Topics 1–6" },
+                    { time: "1h", course: "MCJ-1202", topic: "Revision — Reporting, Sources, News Gathering" },
+                    { time: "1h", course: "MCJ-1203", topic: "Revision (Topics 5–8)" }
+                ]
+            },
+            {
+                date: "August 23, 2025",
+                day: "Thursday",
+                dayNumber: 11,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Revision — Topics 7–11" },
+                    { time: "1h", course: "MCJ-1202", topic: "Mixed Questions" },
+                    { time: "1h", course: "MCJ-1203", topic: "Mixed Questions" }
+                ]
+            },
+            {
+                date: "August 24, 2025",
+                day: "Friday",
+                dayNumber: 12,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Mixed Questions" },
+                    { time: "1h", course: "MCJ-1202", topic: "Mixed Questions" },
+                    { time: "1h", course: "MCJ-1203", topic: "Mixed Questions" }
+                ]
+            },
+            {
+                date: "August 25, 2025",
+                day: "Saturday",
+                dayNumber: 13,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Practice Test" },
+                    { time: "1h", course: "MCJ-1202", topic: "Practice Test" },
+                    { time: "1h", course: "MCJ-1203", topic: "Practice Test" }
+                ]
+            },
+            {
+                date: "August 26, 2025",
+                day: "Sunday",
+                dayNumber: 14,
+                schedule: [
+                    { time: "2h", course: "MCJ-1201", topic: "Weak Areas / Last Recap" },
+                    { time: "1h", course: "MCJ-1202", topic: "Weak Areas / Last Recap" },
+                    { time: "1h", course: "MCJ-1203", topic: "Weak Areas / Last Recap" }
+                ]
+            }
+        ];
+
+        // Track uploaded resources
+        let uploadedResources = [];
+        
+        // Timer variables
+        let timerInterval;
+        let timerSeconds = 0;
+        let timerRunning = false;
+
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('todayDate').textContent = today.toLocaleDateString('en-US', options);
+            
+            // Load initial schedule
+            loadSchedule(5);
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links and pages
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    pages.forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show corresponding page
+                    const pageId = this.getAttribute('data-page');
+                    document.getElementById(pageId).classList.add('active');
+                    
+                    // Close mobile menu if open
+                    navMenu.classList.remove('active');
+                });
+            });
+            
+            // Mobile menu toggle
+            menuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+            
+            // Topic checkbox functionality
+            const topicCheckboxes = document.querySelectorAll('.topic-checkbox');
+            topicCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const topicItem = this.closest('.topic-item');
+                    const statusElement = topicItem.querySelector('.topic-status');
+                    
+                    if (this.checked) {
+                        statusElement.textContent = 'Completed';
+                        statusElement.classList.remove('status-pending');
+                        statusElement.classList.add('status-completed');
+                        showNotification('Topic marked as completed!');
+                    } else {
+                        statusElement.textContent = 'Pending';
+                        statusElement.classList.remove('status-completed');
+                        statusElement.classList.add('status-pending');
+                    }
+                    
+                    // Update progress automatically
+                    updateProgress();
+                });
+            });
+            
+            // Load more days button
+            document.getElementById('loadMoreDays').addEventListener('click', function() {
+                const currentCount = document.querySelectorAll('.schedule-card').length;
+                loadSchedule(currentCount + 5);
+            });
+            
+            // Initialize progress
+            updateProgress();
+            
+            // Q&A functionality
+            const askButton = document.getElementById('askButton');
+            const questionInput = document.getElementById('questionInput');
+            
+            askButton.addEventListener('click', askQuestion);
+            questionInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    askQuestion();
+                }
+            });
+            
+            // CGPA input listeners
+            const cgpaInputs = document.querySelectorAll('.cgpa-input');
+            cgpaInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    updateSemesterGPA();
+                });
+            });
+            
+            // File upload functionality
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadButton = document.getElementById('uploadButton');
+            const fileInput = document.getElementById('fileInput');
+            
+            uploadButton.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            // Timer functionality
+            const startTimer = document.getElementById('startTimer');
+            const pauseTimer = document.getElementById('pauseTimer');
+            const resetTimer = document.getElementById('resetTimer');
+            
+            startTimer.addEventListener('click', function() {
+                if (!timerRunning) {
+                    timerRunning = true;
+                    timerInterval = setInterval(updateTimer, 1000);
+                    showNotification('Timer started!');
+                }
+            });
+            
+            pauseTimer.addEventListener('click', function() {
+                if (timerRunning) {
+                    timerRunning = false;
+                    clearInterval(timerInterval);
+                    showNotification('Timer paused!');
+                }
+            });
+            
+            resetTimer.addEventListener('click', function() {
+                timerRunning = false;
+                clearInterval(timerInterval);
+                timerSeconds = 0;
+                updateTimerDisplay();
+                showNotification('Timer reset!');
+            });
+            
+            // Quick notes functionality
+            const saveNotesButton = document.getElementById('saveNotesButton');
+            const quickNotesTextarea = document.getElementById('quickNotesTextarea');
+            
+            saveNotesButton.addEventListener('click', function() {
+                const notes = quickNotesTextarea.value.trim();
+                if (notes) {
+                    // Save notes to localStorage
+                    localStorage.setItem('quickNotes', notes);
+                    showNotification('Notes saved successfully!');
+                } else {
+                    showNotification('Please enter some notes', 'warning');
+                }
+            });
+            
+            // Load saved notes
+            const savedNotes = localStorage.getItem('quickNotes');
+            if (savedNotes) {
+                quickNotesTextarea.value = savedNotes;
+            }
+            
+            // Auto-save notes every 30 seconds
+            setInterval(function() {
+                const notes = quickNotesTextarea.value.trim();
+                if (notes) {
+                    localStorage.setItem('quickNotes', notes);
+                }
+            }, 30000);
+        });
+        
+        // Function to show a specific page
+        function showPage(pageId) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            
+            navLinks.forEach(l => l.classList.remove('active'));
+            pages.forEach(p => p.classList.remove('active'));
+            
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        // Function to load schedule
+        function loadSchedule(count) {
+            const container = document.getElementById('scheduleContainer');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < Math.min(count, scheduleData.length); i++) {
+                const day = scheduleData[i];
+                const card = document.createElement('div');
+                card.className = 'schedule-card';
+                
+                let scheduleItems = '';
+                day.schedule.forEach(item => {
+                    scheduleItems += `
+                        <div class="schedule-item">
+                            <div class="schedule-time">
+                                <i class="fas fa-clock"></i> ${item.time}
+                            </div>
+                            <div class="schedule-course">${item.course}:</div>
+                            <div class="schedule-topic">${item.topic}</div>
+                        </div>
+                    `;
+                });
+                
+                card.innerHTML = `
+                    <div class="schedule-header">
+                        <div>
+                            <div class="schedule-date">${day.date}</div>
+                            <div class="schedule-day">${day.day}</div>
+                        </div>
+                        <div class="schedule-badge">Day ${day.dayNumber}</div>
+                    </div>
+                    <div class="schedule-body">
+                        ${scheduleItems}
+                        <div class="schedule-progress">
+                            <div class="progress-text">
+                                <span>Daily Progress</span>
+                                <span class="progress-percent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="schedule-actions">
+                            <div class="schedule-checkbox">
+                                <input type="checkbox" id="day-${day.dayNumber}" onchange="markDayComplete(${day.dayNumber})">
+                                <label for="day-${day.dayNumber}">Mark as completed</label>
+                            </div>
+                        </div>
+                        <textarea class="schedule-notes" placeholder="Add notes for this day..."></textarea>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            }
+        }
+        
+        // Function to mark day as complete
+        function markDayComplete(dayNumber) {
+            const checkbox = document.getElementById(`day-${dayNumber}`);
+            const card = checkbox.closest('.schedule-card');
+            const progressFill = card.querySelector('.progress-fill');
+            const progressPercent = card.querySelector('.progress-percent');
+            
+            if (checkbox.checked) {
+                progressFill.style.width = '100%';
+                progressPercent.textContent = '100%';
+                showNotification(`Day ${dayNumber} marked as completed!`);
+            } else {
+                progressFill.style.width = '0%';
+                progressPercent.textContent = '0%';
+            }
+        }
+        
+        // Function to update progress
+        function updateProgress() {
+            // Calculate progress based on checked topics
+            const allCheckboxes = document.querySelectorAll('.topic-checkbox');
+            const checkedCheckboxes = document.querySelectorAll('.topic-checkbox:checked');
+            
+            const totalTopics = allCheckboxes.length;
+            const completedTopics = checkedCheckboxes.length;
+            
+            // Calculate overall progress
+            const overallProgress = totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0;
+            document.getElementById('overallProgress').textContent = `${overallProgress}%`;
+            document.getElementById('overallProgressBar').style.width = `${overallProgress}%`;
+            document.getElementById('dashboardProgress').textContent = `${overallProgress}%`;
+            
+            // Calculate course progress
+            const courses = ['mcj1201', 'mcj1202', 'mcj1203', 'mcj1204'];
+            courses.forEach(course => {
+                const courseCheckboxes = document.querySelectorAll(`#${course}-1, #${course}-2, #${course}-3, #${course}-4, #${course}-5, #${course}-6, #${course}-7, #${course}-8, #${course}-9, #${course}-10, #${course}-11`);
+                const courseCheckedCheckboxes = document.querySelectorAll(`#${course}-1:checked, #${course}-2:checked, #${course}-3:checked, #${course}-4:checked, #${course}-5:checked, #${course}-6:checked, #${course}-7:checked, #${course}-8:checked, #${course}-9:checked, #${course}-10:checked, #${course}-11:checked`);
+                
+                const courseTotalTopics = courseCheckboxes.length;
+                const courseCompletedTopics = courseCheckedCheckboxes.length;
+                
+                const courseProgress = courseTotalTopics > 0 ? Math.round((courseCompletedTopics / courseTotalTopics) * 100) : 0;
+                document.getElementById(`${course}Progress`).textContent = `${courseProgress}%`;
+                document.getElementById(`${course}ProgressBar`).style.width = `${courseProgress}%`;
+            });
+            
+            // Update dashboard stat
+            document.querySelectorAll('.stat-value')[2].textContent = `${overallProgress}%`;
+            
+            // Update achievements
+            document.querySelectorAll('.stat-value')[5].textContent = completedTopics;
+            
+            // Show milestone notifications
+            if (overallProgress === 25) {
+                showNotification('Congratulations! You\'ve completed 25% of your topics!');
+            } else if (overallProgress === 50) {
+                showNotification('Halfway there! You\'ve completed 50% of your topics!');
+            } else if (overallProgress === 75) {
+                showNotification('Almost done! You\'ve completed 75% of your topics!');
+            } else if (overallProgress === 100) {
+                showNotification('Amazing! You\'ve completed all your topics!', 'success');
+            }
+        }
+        
+        // Function to handle file uploads
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Check file type
+                const validTypes = ['application/pdf', 'text/plain', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+                
+                if (!validTypes.includes(file.type)) {
+                    showNotification(`Invalid file type: ${file.name}`, 'warning');
+                    continue;
+                }
+                
+                // Add file to resources list
+                const resourceId = Date.now() + i;
+                uploadedResources.push({
+                    id: resourceId,
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    type: file.type
+                });
+                
+                // Update UI
+                updateResourceList();
+                showNotification(`${file.name} uploaded successfully!`);
+            }
+            
+            // Reset file input
+            document.getElementById('fileInput').value = '';
+        }
+        
+        // Function to format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Function to update resource list
+        function updateResourceList() {
+            const resourceList = document.getElementById('resourceList');
+            
+            if (uploadedResources.length === 0) {
+                resourceList.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            uploadedResources.forEach(resource => {
+                const icon = getFileIcon(resource.type);
+                
+                html += `
+                    <div class="resource-item">
+                        <div class="resource-info">
+                            <i class="${icon} resource-icon"></i>
+                            <span class="resource-name">${resource.name}</span>
+                            <span class="resource-size">(${resource.size})</span>
+                        </div>
+                        <button class="resource-remove" onclick="removeResource(${resource.id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            resourceList.innerHTML = html;
+        }
+        
+        // Function to get file icon based on type
+        function getFileIcon(type) {
+            if (type === 'application/pdf') {
+                return 'fas fa-file-pdf';
+            } else if (type === 'text/plain') {
+                return 'fas fa-file-alt';
+            } else if (type === 'application/msword' || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                return 'fas fa-file-word';
+            } else if (type === 'application/vnd.ms-powerpoint' || type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+                return 'fas fa-file-powerpoint';
+            } else {
+                return 'fas fa-file';
+            }
+        }
+        
+        // Function to remove resource
+        function removeResource(id) {
+            uploadedResources = uploadedResources.filter(resource => resource.id !== id);
+            updateResourceList();
+            showNotification('Resource removed');
+        }
+        
+        // Function to ask a question using OpenRouter API
+        async function askQuestion() {
+            const questionInput = document.getElementById('questionInput');
+            const qaResponse = document.getElementById('qaResponse');
+            const answerText = document.getElementById('answerText');
+            const askButton = document.getElementById('askButton');
+            
+            const question = questionInput.value.trim();
+            
+            if (question === '') {
+                showNotification('Please enter a question', 'warning');
+                return;
+            }
+            
+            // Show loading state
+            askButton.innerHTML = '<div class="loading"></div> Thinking...';
+            askButton.disabled = true;
+            
+            // Show response container with loading message
+            answerText.textContent = 'Thinking...';
+            qaResponse.classList.add('active');
+            
+            try {
+                // Create context from uploaded resources
+                let resourceContext = '';
+                if (uploadedResources.length > 0) {
+                    resourceContext = '\n\nI have access to the following study materials:\n';
+                    uploadedResources.forEach(resource => {
+                        resourceContext += `- ${resource.name}\n`;
+                    });
+                    resourceContext += '\nPlease refer to these materials when answering my question if relevant.\n\n';
+                }
+                
+                // OpenRouter API endpoint and key
+                const apiKey = "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";
+                const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                        'HTTP-Referer': 'https://study-assistant.app',
+                        'X-Title': 'Study Assistant'
+                    },
+                    body: JSON.stringify({
+                        model: "openai/gpt-3.5-turbo",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "You are a helpful university study assistant. Provide clear, concise answers to academic questions related to journalism, communication, and computer science. When answering questions, refer to the uploaded study materials if they are relevant to the question."
+                            },
+                            {
+                                role: "user",
+                                content: resourceContext + question
+                            }
+                        ],
+                        max_tokens: 500,
+                        temperature: 0.7
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+                
+                const data = await response.json();
+                const answer = data.choices[0].message.content;
+                
+                // Display the answer
+                answerText.textContent = answer;
+                showNotification('Question answered successfully!');
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Fallback to simulated response if API fails
+                answerText.textContent = generateResponse(question);
+                showNotification('Using fallback response due to API error', 'warning');
+            } finally {
+                // Reset button state
+                askButton.innerHTML = '<i class="fas fa-paper-plane"></i> Ask Question';
+                askButton.disabled = false;
+            }
+        }
+        
+        // Function to generate a simulated response (fallback)
+        function generateResponse(question) {
+            const lowerQuestion = question.toLowerCase();
+            
+            if (lowerQuestion.includes('interpersonal') || lowerQuestion.includes('communication')) {
+                return "Interpersonal communication is the process by which people exchange information, feelings, and meaning through verbal and non-verbal messages. It's not just about what is said, but how it's said and the non-verbal messages sent through tone of voice, facial expressions, gestures, and body language.";
+            } else if (lowerQuestion.includes('news') || lowerQuestion.includes('reporting')) {
+                return "News reporting involves gathering, assessing, and presenting information in a balanced and objective way. Good reporting requires verifying facts, seeking multiple perspectives, and presenting information clearly and concisely. The inverted pyramid structure is commonly used, with the most important information at the beginning.";
+            } else if (lowerQuestion.includes('bangladesh') || lowerQuestion.includes('contemporary')) {
+                return "Contemporary issues in Bangladesh include political developments, economic challenges, social changes, and technological advancements. Key areas of focus include democratic processes, economic growth, social justice, environmental concerns, and the impact of globalization on traditional values.";
+            } else if (lowerQuestion.includes('computer') || lowerQuestion.includes('technology')) {
+                return "Computers have revolutionized journalism through digital reporting, online publishing, data analysis, and multimedia storytelling. Key concepts include hardware components, software applications, data communication, networking, and emerging technologies like artificial intelligence that are transforming how news is gathered and delivered.";
+            } else {
+                return "That's a great question! To get the most accurate and comprehensive answer, I recommend consulting your course materials, textbooks, or speaking with your instructor. You can also try rephrasing your question with more specific details related to your coursework.";
+            }
+        }
+        
+        // Function to update semester GPA
+        function updateSemesterGPA() {
+            const mcj1201 = parseFloat(document.getElementById('mcj1201').value) || 0;
+            const mcj1202 = parseFloat(document.getElementById('mcj1202').value) || 0;
+            const mcj1203 = parseFloat(document.getElementById('mcj1203').value) || 0;
+            const mcj1204 = parseFloat(document.getElementById('mcj1204').value) || 0;
+            
+            // Calculate grade points (assuming 3 credits each)
+            const gradePoints = (mcj1201 + mcj1202 + mcj1203 + mcj1204) * 3;
+            const totalCredits = 12;
+            const semesterGPA = gradePoints / totalCredits;
+            
+            // Update UI
+            document.getElementById('gradePoints').textContent = gradePoints.toFixed(2);
+            document.getElementById('sem12GPA').textContent = semesterGPA.toFixed(2);
+        }
+        
+        // Function to calculate CGPA
+        function calculateCGPA() {
+            const mcj1201 = parseFloat(document.getElementById('mcj1201').value) || 0;
+            const mcj1202 = parseFloat(document.getElementById('mcj1202').value) || 0;
+            const mcj1203 = parseFloat(document.getElementById('mcj1203').value) || 0;
+            const mcj1204 = parseFloat(document.getElementById('mcj1204').value) || 0;
+            
+            // Calculate grade points (assuming 3 credits each)
+            const gradePoints = (mcj1201 + mcj1202 + mcj1203 + mcj1204) * 3;
+            const totalCredits = 12;
+            const semesterGPA = gradePoints / totalCredits;
+            
+            // Previous semester data
+            const prevCredits = 15;
+            const prevGradePoints = 3.40 * prevCredits;
+            
+            // Calculate CGPA
+            const totalCreditsAll = prevCredits + totalCredits;
+            const totalGradePointsAll = prevGradePoints + gradePoints;
+            const cgpa = totalGradePointsAll / totalCreditsAll;
+            
+            // Update UI
+            document.getElementById('gradePoints').textContent = gradePoints.toFixed(2);
+            document.getElementById('sem12GPA').textContent = semesterGPA.toFixed(2);
+            document.getElementById('finalCGPA').textContent = cgpa.toFixed(2);
+            document.getElementById('totalCredits').textContent = totalCreditsAll;
+            document.getElementById('totalGradePoints').textContent = totalGradePointsAll.toFixed(2);
+            document.getElementById('cgpaCalculation').textContent = cgpa.toFixed(2);
+            
+            // Show result
+            document.getElementById('cgpaResult').classList.add('active');
+            
+            // Show CGPA milestone notifications
+            if (cgpa >= 3.75) {
+                showNotification('Congratulations! You\'ve reached your CGPA target of 3.75+!', 'success');
+            } else if (cgpa >= 3.50) {
+                showNotification('Great progress! You\'re getting close to your CGPA target.');
+            }
+        }
+        
+        // Function to update timer display
+        function updateTimerDisplay() {
+            const hours = Math.floor(timerSeconds / 3600);
+            const minutes = Math.floor((timerSeconds % 3600) / 60);
+            const seconds = timerSeconds % 60;
+            
+            const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+        
+        // Function to update timer
+        function updateTimer() {
+            timerSeconds++;
+            updateTimerDisplay();
+            
+            // Show milestone notifications
+            if (timerSeconds === 3600) {
+                showNotification('Congratulations! You\'ve studied for 1 hour!');
+            } else if (timerSeconds === 7200) {
+                showNotification('Amazing! You\'ve studied for 2 hours!');
+            } else if (timerSeconds === 10800) {
+                showNotification('Incredible! You\'ve studied for 3 hours!');
+            } else if (timerSeconds === 14400) {
+                showNotification('Outstanding! You\'ve studied for 4 hours!');
+            }
+        }
+        
+        // Function to show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification show';
+            
+            if (type === 'warning') {
+                notification.classList.add('warning');
+            } else if (type === 'danger') {
+                notification.classList.add('danger');
+            }
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
